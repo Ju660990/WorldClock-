@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>World Clock</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #222;
+    color: #fff;
+    margin: 0;
+    padding: 20px;
+  }
+  h1 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  .clock-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+  }
+  .city {
+    background-color: #333;
+    padding: 15px;
+    border-radius: 8px;
+    min-width: 150px;
+    text-align: center;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+  }
+  .city h2 {
+    margin: 0 0 10px 0;
+    font-size: 1.2em;
+  }
+  .time {
+    font-size: 2em;
+    font-weight: bold;
+  }
+</style>
+</head>
+<body>
+
+<h1>World Clock</h1>
+<div class="clock-container" id="clocks">
+  <!-- Clocks will be inserted here -->
+</div>
+
+<script>
+  // List of cities with their display names and time zone offsets in hours
+  const cities = [
+    { name: 'New York', offset: -4 },    // EDT (UTC-4)
+    { name: 'London', offset: 0 },       // GMT
+    { name: 'Tokyo', offset: 9 },        // JST
+    { name: 'Sydney', offset: 10 },      // AEST
+    { name: 'Moscow', offset: 3 },       // MSK
+    { name: 'Dubai', offset: 4 },        // GST
+    { name: 'Los Angeles', offset: -7 }, // PDT
+    { name: 'Paris', offset: 2 },        // CEST
+    { name: 'Beijing', offset: 8 },      // CST
+    { name: 'Rio de Janeiro', offset: -3 } // BRT
+  ];
+
+  const clockContainer = document.getElementById('clocks');
+
+  // Create clock elements
+  cities.forEach(city => {
+    const cityDiv = document.createElement('div');
+    cityDiv.className = 'city';
+
+    const cityName = document.createElement('h2');
+    cityName.textContent = city.name;
+
+    const timeSpan = document.createElement('div');
+    timeSpan.className = 'time';
+
+    cityDiv.appendChild(cityName);
+    cityDiv.appendChild(timeSpan);
+
+    clockContainer.appendChild(cityDiv);
+
+    // Store references for updating
+    city.element = timeSpan;
+  });
+
+  function updateClocks() {
+    const now = new Date();
+
+    cities.forEach(city => {
+      // Calculate local time based on UTC + offset
+      const utc = now.getTime() + now.getTimezoneOffset() * 60000;
+      const cityTime = new Date(utc + city.offset * 3600000);
+
+      const hours = cityTime.getHours().toString().padStart(2, '0');
+      const minutes = cityTime.getMinutes().toString().padStart(2, '0');
+      const seconds = cityTime.getSeconds().toString().padStart(2, '0');
+
+      city.element.textContent = `${hours}:${minutes}:${seconds}`;
+    });
+  }
+
+  // Update clocks every second
+  setInterval(updateClocks, 1000);
+  // Initialize immediately
+  updateClocks();
+
+</script>
+
+<!-- Original work by Sahar Amiri -->
+<p style="text-align:center; margin-top:20px; font-size:0.9em;">Original work from Sahar Amiri</p>
+
+</body>
+</html>
